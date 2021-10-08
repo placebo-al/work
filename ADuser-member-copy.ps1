@@ -1,4 +1,4 @@
-
+function copy-ActiveUser {
 param(
     [Parameter(Mandatory)]
     [string] $CopyToUser = (Read-Host -Prompt 'Please enter the user you want to add to: '),
@@ -8,4 +8,5 @@ param(
 
 $CFUser = Get-ADUser $CopyFromUser -Properties MemberOf
 $CTUser = Get-ADUser $CopyToUser -Properties MemberOf
-$CFUser.MemberOf | Where-Object{$CTUser.MemberOf -notcontains $_} |  Add-ADGroupMember -Members $CTUse
+$CFUser.MemberOf | Where-Object{$CTUser.MemberOf -notcontains $_} |  Add-ADGroupMember -Members $CTUser
+}
