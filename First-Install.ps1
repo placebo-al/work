@@ -98,8 +98,8 @@ function Show-Menu
 do
 {
      Show-Menu
-     $input = Read-Host "Please make a selection"
-     switch ($input)
+     $selection = Read-Host "Please make a selection"
+     switch ($selection)
      {
            '1' {
                 clear-host
@@ -128,4 +128,4 @@ do
      }
      pause
 }
-until ($input -eq 'q')
+until ($selection -eq 'q')
