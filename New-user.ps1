@@ -12,11 +12,8 @@ param (
 
 	[Parameter(Mandatory)]
 	[ValidateNotNullOrEmpty()]
-	[string]$Department,
+	[string]$Department
 
-	[Parameter(Mandatory)]
-	[ValidateNotNullOrEmpty()]
-	[int]$EmployeeNumber
 )
 
 try {
