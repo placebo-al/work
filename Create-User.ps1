@@ -19,6 +19,7 @@
 $FirstName = "alan"
 $LastName = "Watson"
 $Department = "Janitor"
+$HomeDir = "`\`\blah`\blahs`$`\"
 
 try {
     if ($LastName.length -gt 6){
@@ -47,7 +48,7 @@ try {
         #ChangePasswordAtLogon = $true
         #Enabled               = $true
         Department            = $Department
-        HomeDirectory         = "`\`\yarrahome`\users`$`\$username"
+        HomeDirectory         = "$Homedir$username"
         #Confirm               = $false
     }
 
