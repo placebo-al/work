@@ -1,4 +1,4 @@
-#requires -Module ActiveDirectory
+ #requires -Module ActiveDirectory
 
 [CmdletBinding(ConfirmImpact = 'High', SupportsShouldProcess)]
 param (
