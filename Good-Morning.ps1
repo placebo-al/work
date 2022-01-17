@@ -1,6 +1,6 @@
 # This is my auto start up script in PowerShell
 
-$cred = Get-Credential admwatsona
+$cred = Get-Credential
 Start-Process "C:\Program Files (x86)\Microsoft Configuration Manager\AdminConsole\bin\Microsoft.ConfigurationManagement.exe" -Credential $cred -WindowStyle Minimized
 Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\Active Directory Users and Computers" -Credential $cred -WindowStyle Minimized
 
