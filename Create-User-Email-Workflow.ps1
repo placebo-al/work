@@ -40,11 +40,11 @@ $screen = @"
 
 $fname $lname
 
-$lname, $fname 
- 
+$lname, $fname
+
 $user_name
 
-This account needs to be extended to: $end_date
+This account needs to be extended to: $end_date
 
 
 -----------------------------------------------------------------------
@@ -81,7 +81,7 @@ $footer = @'
 # First email for account creation
 
 $email1 = "records@gmail.com"
-$Subject1 = "New account creation – $fname $lname"
+$Subject1 = "New account creation:  $fname $lname"
 $Body1 = @"
 $header
 
@@ -98,7 +98,7 @@ $footer
 # Second email for account creation
 
 $email2 = "records@gmail.com"
-$Subject2 = "New account creation – $fname $lname"
+$Subject2 = "New account creation:  $fname $lname"
 $Body2 = @"
 $header
 
@@ -115,7 +115,7 @@ $footer
 # Third email for account creation
 
 $email3 = "records@gmail.com"
-$Subject3 = "New account creation – $fname $lname"
+$Subject3 = "New account creation:  $fname $lname"
 $Body3 = @"
 $header
 
