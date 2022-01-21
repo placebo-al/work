@@ -3,11 +3,11 @@ Set-Location $ENV:USERPROFILE
 New-Alias -Name "c" -Value Clear-Host
 
 function Good-Morning {
-    $cred = Get-Credential "YARRA\admwatsona"
+    $cred = Get-Credential 
     Start-Process -Credential $cred "C:\Program Files (x86)\Microsoft Configuration Manager\AdminConsole\bin\Microsoft.ConfigurationManagement.exe" -WorkingDirectory "C:\Program Files (x86)\Microsoft Configuration Manager\AdminConsole\bin\" -WindowStyle Minimized
 
-    Start-Process -FilePath "C:\Windows\System32\mmc.exe" -WorkingDirectory "C:\Program Files\PowerShell\7" -ArgumentList "C:\Windows\System32\dsa.msc -Verb RunAs admwatsona"
-
+    Start-Process -Credential $cred -FilePath "C:\Windows\System32\cmd.exe" -WorkingDirectory "C:\Windows\System32\" -ArgumentList "/c dsa.msc"
+    
     Start-Process "C:\Program Files (x86)\Microsoft Office\root\Office16\ONENOTE.EXE" -WindowStyle Minimized
 
     Start-Process -File "$($env:LOCALAPPDATA)\Microsoft\Teams\Update.exe" -ArgumentList '--processStart "Teams.exe"'
