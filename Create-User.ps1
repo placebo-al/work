@@ -37,7 +37,7 @@ try {
         $i++
     }
     Add-Type -AssemblyName System.Web;
-    $password = [System.Web.Security.Membership]::GeneratePassword(12,3)
+    # $password = [System.Web.Security.Membership]::GeneratePassword(12,3)
 
     $newUserParams = [ordered]@{
         GivenName             = $FirstName
