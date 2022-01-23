@@ -1,61 +1,61 @@
-#requires -Module ActiveDirectory
-# Import-Module ActiveDirectory -ErrorAction SilentlyContinue
-
 [CmdletBinding()]
 param (
-  [Parameter(Mandatory=$true)]
+  [Parameter(Mandatory = $true)]
   [string]$Username,
   
-  [Parameter(Mandatory=$true)]
+  [Parameter(Mandatory = $true)]
   [string]$ImagePath
 )
 
 Function Resize-Photo {
   param (
-      [Parameter(Mandatory)]
-      [ValidateNotNullOrEmpty()]
-      [string]$Path,
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [string]$Path,
 
-      [Parameter(Mandatory)]
-      [ValidateNotNullOrEmpty()]
-      [Int]$MaximumWidth,
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [Int]$MaximumWidth,
 
-      [Parameter(Mandatory)]
-      [ValidateNotNullOrEmpty()]
-      [Int]$MaximumHeight
+    [Parameter(Mandatory)]
+    [ValidateNotNullOrEmpty()]
+    [Int]$MaximumHeight
   )
-  begin{    
-      if (!(Test-Path -Path $Path))
-      {
-          throw "File $($Path) not found";
-      }
+
+  
+  begin {
+    requires -Module ActiveDirectory
+    Import-Module ActiveDirectory -ErrorAction SilentlyContinue
+    
+    if (!(Test-Path -Path $Path)) {
+      throw "File $($Path) not found";
+    }
   }
-  process{
-      # Rename the file
-      $parentPath = $Path | Split-Path
-      $imageWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($Path)
-      $imageExt = [System.IO.Path]::GetExtension($Path)
-      $newFileName = Join-Path -Path $parentPath -ChildPath "$imageWithoutExt-$MaximumWidth-$MaximumHeight$imageExt"
-      # make the image file
-      $wia = New-Object -com wia.imagefile
-      $wia.LoadFile($Path) 2>&1 | Out-Null
-      $wip = New-Object -ComObject wia.imageprocess
-      $scale = $wip.FilterInfos.Item("Scale").FilterId
-      $wip.Filters.Add($scale)
-      $wip.Filters[1].Properties("MaximumWidth") = $MaximumWidth
-      $wip.Filters[1].Properties("MaximumHeight") = $MaximumHeight
-      # aspect ratio should be set to false if you want the pics in exact size
-      $wip.Filters[1].Properties("PreserveAspectRatio") = $true
-      $newimg = $wip.Apply($wia)
-      $newimg.SaveFile($newFileName) 2>&1 | Out-Null
+  process {
+    # Rename the file
+    $parentPath = $Path | Split-Path
+    $imageWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($Path)
+    $imageExt = [System.IO.Path]::GetExtension($Path)
+    $newFileName = Join-Path -Path $parentPath -ChildPath "$imageWithoutExt-$MaximumWidth-$MaximumHeight$imageExt"
+    # make the image file
+    $wia = New-Object -com wia.imagefile
+    $wia.LoadFile($Path) 2>&1 | Out-Null
+    $wip = New-Object -ComObject wia.imageprocess
+    $scale = $wip.FilterInfos.Item("Scale").FilterId
+    $wip.Filters.Add($scale)
+    $wip.Filters[1].Properties("MaximumWidth") = $MaximumWidth
+    $wip.Filters[1].Properties("MaximumHeight") = $MaximumHeight
+    # aspect ratio should be set to false if you want the pics in exact size
+    $wip.Filters[1].Properties("PreserveAspectRatio") = $true
+    $newimg = $wip.Apply($wia)
+    $newimg.SaveFile($newFileName) 2>&1 | Out-Null
   }
-  end{
-      return $newFileName
+  end {
+    return $newFileName
   }
 }
 
-if (!(Test-Path -Path $ImagePath))
-{
+if (!(Test-Path -Path $ImagePath)) {
   throw "File $($ImagePath) not found";
 }
 
@@ -73,5 +73,5 @@ Import-PSSession $Session -AllowClobber -WarningAction SilentlyContinue -ErrorAc
 $photo = [byte[]] (Get-Content $newFileName -Encoding byte)
 $azurePhoto = [byte[]] (Get-Content $azureFileName -Encoding byte)
 
-Set-ADUser $Username -Replace @{thumbnailPhoto=$photo}
+Set-ADUser $Username -Replace @{thumbnailPhoto = $photo }
 Set-UserPhoto -Identity $Username -PictureData $azurePhoto

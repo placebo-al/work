@@ -17,4 +17,7 @@ $Installer.Updates = $SearchResult
 $Result = $Installer.Install()
 
 #Reboot if required by updates.
-If ($Result.rebootRequired) { shutdown.exe /t 0 /r 
+If ($Result.rebootRequired) 
+{ 
+    shutdown.exe /t 0 /r 
+}
