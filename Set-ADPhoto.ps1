@@ -1,3 +1,19 @@
+<#
+.SYNOPSIS
+  Short description
+.DESCRIPTION
+  Long description
+.EXAMPLE
+  PS C:\> <example usage>
+  Explanation of what the example does
+.INPUTS
+  Inputs (if any)
+.OUTPUTS
+  Output (if any)
+.NOTES
+  General notes
+#>
+
 [CmdletBinding()]
 param (
   [Parameter(Mandatory = $true)]
@@ -70,8 +86,8 @@ $azureFileName = Resize-Photo -Path $ImagePath -MaximumWidth 512 -MaximumHeight 
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/?proxyMethod=RPS -Credential (Get-Credential) -Authentication Basic -AllowRedirection
 Import-PSSession $Session -AllowClobber -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
 
-$photo = [byte[]] (Get-Content $newFileName -Encoding byte)
-$azurePhoto = [byte[]] (Get-Content $azureFileName -Encoding byte)
+$photo = [byte[]] (Get-Content $newFileName -AsByteStream)
+$azurePhoto = [byte[]] (Get-Content $azureFileName -AsByteStream)
 
 Set-ADUser $Username -Replace @{thumbnailPhoto = $photo }
 Set-UserPhoto -Identity $Username -PictureData $azurePhoto
