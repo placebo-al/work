@@ -45,6 +45,13 @@ $header = @"
         color: #e68a00;
         font-size: 12px;
     }
+    .RunningStatus {
+        color: #008000;
+    }
+    
+    .StopStatus {
+        color: #ff0000;
+    }
 
 </style>
 "@
@@ -63,6 +70,7 @@ ConvertTo-Html -As List -Property DeviceID, Name, Caption, MaxClockSpeed, Socket
 # Bios Information
 $BiosInfo = Get-CimInstance -ClassName Win32_BIOS | 
 ConvertTo-Html -As List -Property SMBIOSBIOSVersion, Manufacturer, Name, SerialNumber -Fragment -PreContent "<h2>BIOS Information</h2>"
+$BiosInfo = $BiosInfo -replace 'SMBIOSBIOSVersion', 'Bios Version'
 
 # Getting the drive info
 $DiscInfo = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" | 
@@ -75,8 +83,14 @@ $ServicesInfo = $ServicesInfo -replace '<td>Running</td>','<td class="RunningSta
 $ServicesInfo = $ServicesInfo -replace '<td>Stopped</td>','<td class="StopStatus">Stopped</td>'
 
 # Combine all the info together for a report
-$Report = ConvertTo-Html -Body "$ComputerName $OSInfo $ProInfo $BiosInfo $DiscInfo $ServicesInfo" `
--Title "Computer Information Report" -Head $header -PostContent "<p id='CreationDate'>Creation Date: $(Get-Date)<p>"
+$Params = @{
+    Head = $header
+    Title = "Computer Information Report"
+    Body = "$ComputerName $OSInfo $ProInfo $BiosInfo $DiscInfo $ServicesInfo"
+    PostContent = "<p id='CreationDate'>Creation Date: $(Get-Date)<p>"
+}
+$Report = ConvertTo-Html @Params
+ 
 
 # Generate the report
 $Report | Out-File c:\users\watsona\Desktop\file.html
