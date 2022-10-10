@@ -1,18 +1,32 @@
 
+$header = @"
+<style>
+
+    h1 {
+
+        font-family: Arial, Helvetica, sans-serif;
+        color: #e68a00;
+        font-size: 28px;
+
+    } 
+</style>
+
+"@
+
 # Command to get the actual computer name
 $ComputerName = "<h1>Computer Name: $env:computername</h1>"
 
 # This command gets the OS info
 $OSInfo = Get-CimInstance -class Win32_Operatingsystem | 
-ConvertTo-Html -Property Version, Caption, BuildNumber, Manufacturer -Fragment -PreContent "<h2>Operating System Information</h2>" -As List
+ConvertTo-Html -As List -Property Version, Caption, BuildNumber, Manufacturer -Fragment -PreContent "<h2>Operating System Information</h2>"
 
 # This command get the processor info
 $ProInfo = Get-CimInstance -ClassName Win32_Processor | 
-ConvertTo-Html -Property DeviceID, Name, Caption, MaxClockSpeed, SocketDesignation, Manufacturer -Fragment -PreContent "<h2>Processor Information</h2>" -As List
+ConvertTo-Html -As List -Property DeviceID, Name, Caption, MaxClockSpeed, SocketDesignation, Manufacturer -Fragment -PreContent "<h2>Processor Information</h2>"
 
 # Bios Information
 $BiosInfo = Get-CimInstance -ClassName Win32_BIOS | 
-ConvertTo-Html -Property SMBIOSBIOSVersion, Manufacturer, Name, SerialNumber -Fragment -PreContent "<h2>BIOS Information</h2>" -As List
+ConvertTo-Html -As List -Property SMBIOSBIOSVersion, Manufacturer, Name, SerialNumber -Fragment -PreContent "<h2>BIOS Information</h2>"
 
 # Getting the drive info
 $DiscInfo = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" | 
