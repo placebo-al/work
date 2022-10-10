@@ -1,4 +1,4 @@
-
+# Followed from the following site: https://adamtheautomator.com/html-report/
 $header = @"
 <style>
 
@@ -42,7 +42,7 @@ $header = @"
 
     #CreationDate {
         font-family: Arial, Helvetica, sans-serif;
-        color: #ff3300;
+        color: #e68a00;
         font-size: 12px;
     }
 
@@ -71,10 +71,12 @@ ConvertTo-Html -Property DeviceID, DriveType, ProviderName, VolumeName, Size, Fr
 # Getting information about the top 10 services
 $ServicesInfo = Get-CimInstance -ClassName Win32_Service | Select-Object -First 10 | 
 ConvertTo-Html -Property Name, DisplayName, State -Fragment -PreContent "<h2>Services Information</h2>"
+$ServicesInfo = $ServicesInfo -replace '<td>Running</td>','<td class="RunningStatus">Running</td>' 
+$ServicesInfo = $ServicesInfo -replace '<td>Stopped</td>','<td class="StopStatus">Stopped</td>'
 
 # Combine all the info together for a report
 $Report = ConvertTo-Html -Body "$ComputerName $OSInfo $ProInfo $BiosInfo $DiscInfo $ServicesInfo" `
--Title "Computer Information Report" -Head $header -PostContent "<p>Creation Date: $(Get-Date)<p>"
+-Title "Computer Information Report" -Head $header -PostContent "<p id='CreationDate'>Creation Date: $(Get-Date)<p>"
 
 # Generate the report
 $Report | Out-File c:\users\watsona\Desktop\file.html
