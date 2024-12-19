@@ -7,7 +7,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
 :menuLOOP
 echo.
-echo.============ Menu =======================================
+echo.======================= Menu ==================================
 echo.
 for /f "tokens=1,2,* delims=_ " %%A in ('"findstr /b /c:":menu_" "%~f0""') do echo.  %%B  %%C
 set choice=
@@ -20,55 +20,90 @@ GOTO:menuLOOP
 ::-----------------------------------------------------------
 
 :menu_1   Have some fun
-echo.Have some fun by adding some more code right here
+    echo.Have some fun by adding some more code right here
 GOTO:EOF
 
 :menu_2   List all installed printers
-wmic printer get name
+    wmic printer get name
 GOTO:EOF
 
 :menu_3   Tail log file
 
-@echo off
+    setlocal
+
+    set "filename=your_file.txt"
+    set /a linecount=0
+
+    REM Count the total number of lines in the file
+    for /f "usebackq" %%A in (`find /c /v "" ^< %filename%`) do set linecount=%%A
+
+    REM Offset to skip the initial lines
+    set /a skipcount=linecount-10
+
+    REM Display the last 10 lines
+    for /f "usebackq skip=%skipcount% delims=" %%A in (%filename%) do echo %%A
+
+    endlocal
+    pause
+
+GOTO:EOF
+
+:menu_4   Force update DeviceIntegrator
+
 setlocal
 
-set "filename=your_file.txt"
-set /a linecount=0
+REM Stop the service
+echo Stopping the DeviceIntegrator service...
+net stop deviceIntegrator
+if %ERRORLEVEL% neq 0 (
+    echo Failed to stop the service. Exiting script.
+    exit /b 1
+)
 
-REM Count the total number of lines in the file
-for /f "usebackq" %%A in (`find /c /v "" ^< %filename%`) do set linecount=%%A
+REM Run the update command
+set "exePath=C:\Program Files\PerfectGym\DeviceIntegrator\deviceintegrator.exe"
+if exist "%exePath%" (
+    echo Running the update...
+    "%exePath%" noservice update
+    if %ERRORLEVEL% neq 0 (
+        echo Update failed. Exiting script.
+        exit /b 1
+    )
+) else (
+    echo The executable was not found at %exePath%. Exiting script.
+    exit /b 1
+)
 
-REM Offset to skip the initial lines
-set /a skipcount=linecount-10
+REM Start the service
+echo Starting the DeviceIntegrator service...
+net start deviceIntegrator
+if %ERRORLEVEL% neq 0 (
+    echo Failed to start the service. Exiting script.
+    exit /b 1
+)
 
-REM Display the last 10 lines
-for /f "usebackq skip=%skipcount% delims=" %%A in (%filename%) do echo %%A
-
+echo The DeviceIntegrator service was updated and restarted successfully.
 endlocal
-pause
-
 
 GOTO:EOF
 
 :menu_D   Download DeviceIntegrator
-curl.exe -L -o DeviceIntegrator.msi https://download.perfectgymcdn.com/di/DeviceIntegrator.Installer.2.5.msi
-REM Ensure the file is the expected type
-REM Check the file extension (if needed, ensure curl saves it correctly as .msi)
-set "expectedExtension=.msi"
-for %%A in ("DeviceIntegrator.exe") do (
-    if /I not "%%~xA"=="%expectedExtension%" (
-        echo Unexpected file type downloaded. Aborting.
-        exit /b 1
-    )
-)
 
-@REM if %ERRORLEVEL% neq 0 (
-@REM 	echo Download failed
-@REM 	exit /b %ERRORLEVEL% )
+    curl.exe -L -o DeviceIntegrator.msi https://download.perfectgymcdn.com/di/DeviceIntegrator.Installer.2.5.msi
+    REM Ensure the file is the expected type
+    REM Check the file extension (if needed, ensure curl saves it correctly as .msi)
+    set "expectedExtension=.msi"
+    for %%A in ("DeviceIntegrator.exe") do (
+        if /I not "%%~xA"=="%expectedExtension%" (
+            echo Unexpected file type downloaded. Aborting.
+            exit /b 1
+        )
+    )
+
 GOTO:EOF
 
 :menu_C   Clear Screen
-cls
+    cls
 GOTO:EOF
 
 
