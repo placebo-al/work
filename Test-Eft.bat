@@ -20,18 +20,22 @@ GOTO:menuLOOP
 ::-----------------------------------------------------------
 
 :menu_1   Have some fun
+
     echo.Have some fun by adding some more code right here
+
 GOTO:EOF
 
 :menu_2   List all installed printers
+
     wmic printer get name
+
 GOTO:EOF
 
 :menu_3   Tail log file
 
     setlocal
 
-    set "filename=your_file.txt"
+    set "filename=C:\ProgramData\Creadhoc\PerfectGym\Logs\DeviceIntegrator\nlog-internal.log"
     set /a linecount=0
 
     REM Count the total number of lines in the file
